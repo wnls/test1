@@ -1,6 +1,1 @@
-test1
-=====
-
-to test git commands
-
-blah blah blah i was able to edit - rae
+# CMPSCI 326 Web Programming: Team test1
