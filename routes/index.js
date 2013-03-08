@@ -22,16 +22,19 @@ var users = [
  tweets: [010, 011] },
 ];
 
+var loggedInUser;
+
 /*
  * GET home page.
  */
 exports.home = function(req, res){
 	var username = req.params.id;
 	var i;
-	console.log(users.length);
+	console.log(username);
 	for (i=0; i<users.length; i++) {
-		if (users[i].username == username) {
-			console.log(users[i].username);
+		if (users[i].username === username) {
+			//console.log(users[i].username);
+			loggedInUser = username;
 			break;
 		}
 	}
@@ -44,6 +47,28 @@ exports.home = function(req, res){
   			   } );
 	
 };
+
+exports.follower = function(req, res) {
+	//console.log(req.params);
+	res.render('follower', 
+  			{ title: 'Follower',
+  			  //name: users[i].name,
+  			  //username: username,
+  			  //followerN: users[i].follower.length,
+  			  //followingN: users[i].following.length,
+  			   } );
+}
+
+exports.following = function(req, res) {
+	//console.log(req.params);
+	res.render('following', 
+  			{ title: 'Following',
+  			  //name: users[i].name,
+  			  //username: username,
+  			  //followerN: users[i].follower.length,
+  			  //followingN: users[i].following.length,
+  			   } );
+}
 
 exports.index = function(req, res){
   res.render('index', { title: 'Home' });
