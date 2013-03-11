@@ -1,14 +1,14 @@
 var users = require('../lib/users');
 var tweets = require('../lib/tweets')
 
-var loggedInUser;
+var loggedInUser = "weini";
 var ul = users.ul;
 /*
  * GET home page.
  */
 exports.home = function(req, res){
 	var username = req.params.id;
-  loggedInUser = username;
+  //loggedInUser = username;
   console.log(tweets.tweets);
 	//var i;
 	//console.log(username);
@@ -202,12 +202,22 @@ exports.following = function(req, res) {
 }
 
 exports.interaction = function(req, res) {
-  loggedInUser()
+  console.log("loggedinuser: "+loggedInUser);
+  var user = users.getUserById(loggedInUser);
+  res.render('interaction',
+            { title: 'Interaction',
+              name: user.name,
+              username: user.username,
+              });
 
 }
 
-exports.index = function(req, res){
-  res.render('index', { title: 'Home' });
+exports.to_interaction = function(req, res) {
+  res.redirect('/'+loggedInUser+'/interaction');
+}
+
+exports.to_home = function(req, res){
+  res.redirect('/'+loggedInUser+'/home');
 };
 
 exports.form = function(req, res) {

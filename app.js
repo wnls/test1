@@ -29,19 +29,21 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
-app.get('/users', user.list);
-//app.get('/form', routes.index);
-app.get('/:id', routes.id);
-app.get('/:id/profile', routes.profile);
+app.get('/', routes.to_home);
+app.get('/home', routes.to_home);
 app.get('/:id/home', routes.home);
+//app.get('/form', routes.index);
+app.get('/:id/interaction', routes.interaction);
+app.get('/interaction', routes.to_interaction);
+//app.get('/:id', routes.id);
+app.get('/:id/profile', routes.profile);
+
 app.get('/:id/follower', routes.follower);
 app.post('/:id/follower', routes.follower);
 app.get('/:id/following', routes.following);
 app.post('/newtweet', routes.newtweet);
 app.get('/search/:query', routes.search);
-app.get('/:id/interaction', routes.interaction);
-app.get('/interaction', routes.interaction);
+
 //app.get('/search', routes.search);
 //app.get('/error', routes.error);
 

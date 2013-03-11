@@ -17,7 +17,7 @@
 <p><b><%=name%></b> <a href="/<%=username%>/profile">@<%=username%></a><br>
 	<button onclick="deleteFollower(this)">Delete</button></p>
 
-<form  action="/<%=username%>/follower" method="post" id="Novinky" onsubmit="deleteFollower(<%=username%>)"> 
+<form  action=refresh method="post" id="Novinky" onsubmit="deleteFollower(<%=username%>)"> 
 <%= name %> <a href = "/<%= username %>/profile"> @<%= username %> </a>
 <input onclick="Delete(this)" value="Delete" name="delete[12]" type="submit" />
 </form>
