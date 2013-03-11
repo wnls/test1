@@ -1,7 +1,16 @@
 <% include header %>
 
 <h1><%= title %></h1>
+<h2><%= name %> <a href = "/<%= username %>/profile"> @<%= username %> </a></h2>
 
+<%- content %>
 
+<button onclick="deleteFollower()">deletefollower</button>
+ <script type="text/javascript">
+        function deleteFollower () {
+        	//console.log("sadfasd");
+            alert ("You clicked on the button!");
+        }
+    </script>
 
 <% include footer %>

@@ -31,10 +31,16 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/users', user.list);
-app.get('/form', routes.index);
+//app.get('/form', routes.index);
+app.get('/:id', routes.id);
+app.get('/:id/profile', routes.profile);
 app.get('/:id/home', routes.home);
 app.get('/:id/follower', routes.follower);
 app.get('/:id/following', routes.following);
+app.post('/newtweet', routes.newtweet);
+app.get('/search/:query', routes.search);
+//app.get('/search', routes.search);
+//app.get('/error', routes.error);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
