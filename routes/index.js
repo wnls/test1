@@ -183,14 +183,27 @@ exports.follower = function(req, res) {
 }
 
 exports.following = function(req, res) {
-	//console.log(req.params);
-	res.render('following', 
-  			{ title: 'Following',
-  			  //name: users[i].name,
-  			  //username: username,
-  			  //followerN: users[i].follower.length,
-  			  //followingN: users[i].following.length,
-  			   } );
+	var username = req.params.id;
+  var user = users.getUserById(username);
+  var followinglist = user.following;
+  var content = '';
+  console.log("followinglist: ",followinglist);
+  if (followinglist.length !== 0) {
+    content += userToHtml(followinglist);
+
+  }
+  console.log("content: ", content);
+  res.render('following', 
+        { title: 'Following',
+          name: user.name,
+          username: username,
+          content: content
+           } );
+}
+
+exports.interaction = function(req, res) {
+  loggedInUser()
+
 }
 
 exports.index = function(req, res){

@@ -36,9 +36,12 @@ app.get('/:id', routes.id);
 app.get('/:id/profile', routes.profile);
 app.get('/:id/home', routes.home);
 app.get('/:id/follower', routes.follower);
+app.post('/:id/follower', routes.follower);
 app.get('/:id/following', routes.following);
 app.post('/newtweet', routes.newtweet);
 app.get('/search/:query', routes.search);
+app.get('/:id/interaction', routes.interaction);
+app.get('/interaction', routes.interaction);
 //app.get('/search', routes.search);
 //app.get('/error', routes.error);
 
