@@ -215,3 +215,7 @@ function msgToHtml(msg) {
   //console.log("html content: "+content);
   return content;
 }
+
+exports.help = function (req,res) {
+	res.render('help', {title: 'Help'});
+}
