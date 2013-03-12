@@ -2,7 +2,7 @@ var users = require('../lib/users');
 var tweets = require('../lib/tweets')
 
 var loggedInUser = "tim";
-var ul = users.ul;
+var userdb = users.userdb;
 /*
  * GET home page.
  */
