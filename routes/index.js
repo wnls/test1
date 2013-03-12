@@ -216,6 +216,39 @@ function msgToHtml(msg) {
   return content;
 }
 
+/**
+ * GET Help Page
+ */
 exports.help = function (req,res) {
 	res.render('help', {title: 'Help'});
 }
+
+/**
+ * GET Search Result Page
+ * 
+ * At the moment, only searches through hashtags. What is displayed is not what is returned, however.
+ * We still need to figure out how to manipulate arrays in ejs.
+ * Need also to add search through users, actual message content of tweets and possibly the help page.
+ *
+ * This current version displays the first tweet from the result of searching tweets for hashtag "#ftw".
+ * It is also able to recognize active hashtags clicked/searched in a tweet.
+ */
+exports.search = function (req,res) {
+	var ht = '#ftw';
+	var query = "#"+req.params.query;
+	var results = t.searchTweetsByHT(ht);
+	res.render('search', {title: 'Search Result',
+								searchPhrase: query,
+								name : results[0].name,
+								username: results[0].username,
+								msg: msgToHtml(results[0].msg),
+								date: results[0].date});	
+	
+};
+
+/**
+ * Supports searching using the search box. Simply passes query string from search box to search.
+ */
+exports.searchBox = function (req,res) {
+	res.redirect('/search/'+req.body.query);
+};
