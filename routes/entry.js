@@ -9,7 +9,7 @@ exports.online = online; //needed if newTweet?
 
 //GET rsegister
 exports.register = function(req, res){
-  res.render('register',{title: 'Tweetee', message: req.flash("error")});
+  res.render('register',{title: 'Tweetee',message: req.flash("error")});
 };
 
 //GET forgotlogin

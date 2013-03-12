@@ -1,9 +1,9 @@
 
-    <% include header %>
-    <h1><%= title %></h1>
+    <% include entryheader %>
+    <h1><%- title %></h1>
     <div>
         <h3>Registration</h3>
-        <% if ( message ) { %>
+		<% if ( message ) { %>
            <div class="flash"><%= message %></div>
         <% } %>
         <form method="post" action="/verify">
