@@ -6,3 +6,80 @@ body {
 a {
   color: #00B7FF;
 }
+
+#navbar {
+    background-color:    #45c7b1;
+	height:				 35px;
+	margin-left:		 10px;
+	margin-right:		 10px;
+	width:				 100%;
+}
+
+#nbleft {
+	vertical-align:		 middle;
+	height:				 inherit;
+	width:		 		 40%;
+	float: 				 left;
+}
+
+#nbcenter1 {
+	vertical-align:		 0px;
+	height:				 inherit;
+	float:				 left;
+	width:				 20%;
+}
+
+#nbcenter2 {
+	vertical-align:		 0px;
+	height:				 inherit;
+	float:				 left;
+	width:				 20%;
+}
+
+#nbright {
+	vertical-align:		 middle;
+    height:              inherit;
+    float:               right;
+}
+
+#editInfo {
+    padding:             25px;
+    width:               400px;
+    height:              300px;
+    float:               left;
+}
+
+#editImg {
+    padding:             25px;
+    width:               400px;
+    height:              300px;
+    float:               left;
+}
+
+.center {
+	margin:auto;
+	width:40%;
+}
+
+#ubox_profilepic {
+    margin-top: 50px;
+    margin-left: 10%;
+    float: left;
+}
+
+#ubox_info {
+    margin-top: 60px;
+    margin-left: 30px;
+	height: 60px;
+	width: 300px;
+	float: left;
+}
+
+#conversation {
+	padding-top: 140px;
+}
+
+li.question {
+	text-decoration: underline;
+	font-weight: bold;
+}
