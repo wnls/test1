@@ -216,6 +216,9 @@ function msgToHtml(msg) {
   return content;
 }
 
+var userdb = users.userdb;
+var mytweets = tweets.tweetdb;
+var conversation = tweets.conversation;
 /**
  * GET Help Page
  */
@@ -236,7 +239,7 @@ exports.help = function (req,res) {
 exports.search = function (req,res) {
 	var ht = '#ftw';
 	var query = "#"+req.params.query;
-	var results = t.searchTweetsByHT(ht);
+	var results = tweets.searchTweetsByHT(ht);
 	res.render('search', {title: 'Search Result',
 								searchPhrase: query,
 								name : results[0].name,
@@ -251,4 +254,77 @@ exports.search = function (req,res) {
  */
 exports.searchBox = function (req,res) {
 	res.redirect('/search/'+req.body.query);
+};
+
+/**
+ * GET Detailed Tweet Page
+ * 
+ * Renders detailed conversation. A conversation is a thread of tweets through replies.
+ * The page displays the first "original" tweet in the conversation and the user information of who posted that tweet.
+ * There is a default text box that allows users to reply to the "original" tweet.
+ * The rest of the conversation appears below the box.
+ *
+ * This version shows how the display looks like.
+ * It also supports a fake reply post to the original tweet.
+ */
+exports.detailedTweet = function (req, res) {
+	//fetching conv1 using tweet2
+	//var tweetId = tid wherein tid is passed
+	var tweetId = 2;
+	var tweetconvo = tweets.getTweetConvoByTweetID(tweetId);
+	var content = '';
+	
+	username = tweetconvo[0].username;
+	name = users.get_user(username).name;
+	ot = '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
+			+ '</a><br>' + msgToHtml(tweetconvo[0].msg) + '<br>' 
+			+ tweetconvo[0].date + '</p>';
+	
+	for (var i=1; i < tweetconvo.length; i++) {
+		username = tweetconvo[i].username;
+		name = users.get_user(username).name;
+		content += '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
+			+ '</a><br>' + msgToHtml(tweetconvo[i].msg) + '<br>' 
+			+ tweetconvo[i].date + '</p>';
+	}
+	
+	res.render('detailedTweet',{title: 'Detailed Tweet', 
+						convo: content, 
+						profilePic: userdb[0].profilePic,
+						name: users.get_user(tweetconvo[0].username).name,
+						origTweet: ot,
+						username: tweetconvo[0].username});
+};
+
+/**
+ * This version shows how the display looks like with a fake reply post to the original tweet.
+ */
+exports.detailedTweetFakeReply = function (req, res) {	
+	var tweetId = 2;
+	var tweetconvo = tweets.getTweetConvoByTweetID(tweetId);
+	var content = '';
+	
+	username = tweetconvo[0].username;
+	name = users.get_user(username).name;
+	ot = '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
+			+ '</a><br>' + msgToHtml(tweetconvo[0].msg) + '<br>' 
+			+ tweetconvo[0].date + '</p>';
+	
+	for (var i=1; i < tweetconvo.length; i++) {
+		username = tweetconvo[i].username;
+		name = users.get_user(username).name;
+		content += '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
+			+ '</a><br>' + msgToHtml(tweetconvo[i].msg) + '<br>' 
+			+ tweetconvo[i].date + '</p>';
+	}
+	
+	content += '<p><b>Hazel Rozetta</b><a href="/">@hazel</a><br>' + req.body.replyTweet + '<br>'+ tweetconvo[0].date +'</p>';
+	
+	res.render('detailedTweet',{title: 'Detailed Tweet Fake Reply', 
+						convo: content, 
+						profilePic: userdb[0].profilePic,
+						name: users.get_user(tweetconvo[0].username).name,
+						origTweet: ot,
+						username: tweetconvo[0].username});
+
 };

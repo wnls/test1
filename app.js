@@ -74,9 +74,12 @@ app.get('/:id/follower', routes.follower);
 app.post('/:id/follower', routes.follower);
 app.get('/:id/following', routes.following);
 app.post('/:id/newtweet', routes.newtweet);
+
 app.get('/help',routes.help);
 app.get('/search/:query', routes.search);
 app.post('/searchBox',routes.searchBox);
+app.get('/detailedTweet', routes.detailedTweet);
+app.post('/detailedTweetFakeReply', routes.detailedTweetFakeReply);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
