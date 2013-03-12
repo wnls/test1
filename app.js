@@ -1,18 +1,21 @@
-
 /**
+ * --Tweetee Application Main File, app.js--
+ * -ADD TWEETEE DESCRIPTION/BLURB HERE-
+ *
  * Module dependencies.
  */
 
 var express = require('express')
   , routes = require('./routes')
-  , user = require('./routes/user')
+  , entry = require('./routes/entry')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , flash = require('connect-flash');
 
 var app = express();
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 3001);
+  app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.favicon());
@@ -21,6 +24,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser('your secret here'));
   app.use(express.session());
+  app.use(flash());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -28,24 +32,50 @@ app.configure(function(){
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
+/*
+ * Entry-related Routes
+ *   '/'             -> renders login.ejs
+ *   '/userAuth'     -> from login form, redirect to login.ejs or :user/home.ejs
+ *   '/register'     -> renders register.ejs
+ *   '/forgotlogin'  -> renders forgotlogin.ejs
+ *   '/:user/home'   -> renders :user/home.ejs
+ *   '/logout'       -> redirect to login.ejs
+ *   '/verify'       -> from register form, redirect to register.ejs or render varifyCode
+ *   '/verifyCode'   -> renders varifyCode.ejs
+ *   '/codeCheck'    -> from verifyCode form, redirect to login.ejs or verifyCode.ejs
+ *   '/forgotlogin'  -> renders forgotlogin.ejs
+ *   '/forgetloginProcess -> from forgotlogin form, directs to the forgotlogin.ejs
+ */
+app.get('/', entry.login);    
+app.post('/userAuth',entry.userAuth);
+app.get('/register', entry.register);
+app.get('/forgotlogin', entry.forgotlogin);
+app.get('/logout', entry.logout);
+app.post('/verify',entry.verify);
+app.get('/verifyCode',entry.verifyCode);
+app.post('/codeCheck',entry.codeCheck);
+app.get('/forgotlogin', entry.forgotlogin);
+app.post('/forgotloginProcess', entry.forgotloginProcess);
 
-app.get('/', routes.to_home);
-app.get('/home', routes.to_home);
+/*
+ * Specific UserInterf. Related Routes
+ *   '/newtweet'        ->
+ *   '/:user/profile'   ->
+ *   '/:user/follower'  ->
+ *   '/:user/following' ->
+ */
+//app.get('/', routes.to_home);
+//app.get('/home', routes.to_home);
 app.get('/:id/home', routes.home);
-//app.get('/form', routes.index);
 app.get('/:id/interaction', routes.interaction);
-app.get('/interaction', routes.to_interaction);
-//app.get('/:id', routes.id);
+//app.get('/interaction', routes.to_interaction);
 app.get('/:id/profile', routes.profile);
-
 app.get('/:id/follower', routes.follower);
 app.post('/:id/follower', routes.follower);
 app.get('/:id/following', routes.following);
-app.post('/newtweet', routes.newtweet);
+app.post('/:id/newtweet', routes.newtweet);
 app.get('/search/:query', routes.search);
 
-//app.get('/search', routes.search);
-//app.get('/error', routes.error);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

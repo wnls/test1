@@ -1,37 +1,42 @@
 var users = require('../lib/users');
-var tweets = require('../lib/tweets')
+var tweets = require('../lib/tweets');
+var entry = require('../routes/entry');
 
-var loggedInUser = "tim";
-var userdb = users.userdb;
+//var loggedInUser = "tim";
+//var userdb = users.userdb;
+var online = entry.online;
 /*
  * GET home page.
  */
 exports.home = function(req, res){
-	var username = req.params.id;
-  //loggedInUser = username;
-  
-  var u = users.getUserById(loggedInUser);
-  var tl = tweets.getRecentT(loggedInUser, u.following, 20);
-  // display timeline tweets
+  var userid=req.cookies.userid;
+  var onlineUser=online[userid];
+  if ( onlineUser.username == req.params.id){
+    var u = users.getUserById(onlineUser.username);
+    //console.log("onlineUser "+u);
+    var tl = tweets.getRecentT(onlineUser, u.following, 20);
+    // display timeline tweets
 
-	res.render('home', 
-  			{ title: 'Home',
-  			  name: u.name,
-  			  username: username,
-  			  followerN: u.follower.length,
-  			  followingN: u.following.length,
-          tweets: tweetsToHtml(tl)
-  			   } );
-
+  	res.render('home', 
+    			{ title: 'Home',
+    			  name: u.name,
+    			  username: u.username,
+    			  followerN: u.follower.length,
+    			  followingN: u.following.length,
+            tweets: tweetsToHtml(tl)
+    			   } );
+  } else {
+        res.send('Page Access Not Authorized.');
+  }
 }
 
 
 exports.newtweet = function(req, res) {
-  //console.log(req.body.message);
-  tweets.addTweet(tweets.tweetdb.length, users.getUserById(loggedInUser).name, loggedInUser, req.body.message, null, null, null);
-  users.addUserT(loggedInUser, tweets.tweetdb.length-1);
-  //console.log(tweets.tweetdb);
-  res.redirect('/'+loggedInUser+'/home');
+  var username = req.params.id;
+  var u = users.getUserById(username);
+  tweets.addTweet(tweets.tweetdb.length, u.name, u.username, req.body.message, null, null, null);
+  users.addUserT(u.username, tweets.tweetdb.length-1);
+  res.redirect('/'+username+'/home');
 }
 
 exports.id = function(req, res) {
@@ -74,11 +79,6 @@ exports.profile = function(req, res) {
 exports.search = function(req, res) {
   var query = "#"+req.params.query;
   var result = tweets.getTByHashtag(query, 20);
-  //console.log("query: "+query);
-  //console.log("result: "+result[0]);
-  
-  //var u = users.getUserById(username);
-  //var t = users.getTByUser(username);
   var j = result.length-1;
   var content='';
   // display timeline tweets
@@ -86,17 +86,11 @@ exports.search = function(req, res) {
     //console.log("i="+i);
     var t = result[i];
     var usr = users.getUserById(t.username);
-    //console.log(usr.name);
-    //console.log(i+" la");
-    // data.replace(/(.)/g, '<img src="$1.png" />')
-    //var htmlmsg = t.msg;
     var a = t.msg.split(" ");
-    //console.log("split: "+a);
     content += '<p><b>'+usr.name+'</b> <a href="/'+t.username+'/profile">@'+t.username+'</a><br>'
               //+t.msg+'<br>'
               +msgToHtml(t.msg)+'<br>'
               +t.date+'</p>';
-    //console.log("finish "+i);
   }
   res.render('search',
              {title: 'Search Result',
@@ -130,12 +124,12 @@ exports.following = function(req, res) {
   var user = users.getUserById(username);
   var followinglist = user.following;
   var content = '';
-  console.log("followinglist: ",followinglist);
+  //console.log("followinglist: ",followinglist);
   if (followinglist.length !== 0) {
     content += userToHtml(followinglist, "Unfollow");
 
   }
-  console.log("content: ", content);
+  //console.log("content: ", content);
   res.render('following', 
         { title: 'Following',
           name: user.name,
@@ -146,8 +140,9 @@ exports.following = function(req, res) {
 
 exports.interaction = function(req, res) {
   //console.log("loggedinuser: "+loggedInUser);
-  var user = users.getUserById(loggedInUser);
-  var tl = tweets.getTByMention(loggedInUser, 20);
+  var username = req.params.id;
+  var user = users.getUserById(username);
+  var tl = tweets.getTByMention(username, 20);
 
   res.render('interaction',
             { title: 'Interaction',
@@ -157,21 +152,21 @@ exports.interaction = function(req, res) {
               });
 
 }
-
+/*
 exports.to_interaction = function(req, res) {
   res.redirect('/'+loggedInUser+'/interaction');
 }
 
 exports.to_home = function(req, res){
   res.redirect('/'+loggedInUser+'/home');
-};
+};*/
 
 
 function userToHtml(userlist, btntext) {
   //console.log("userlist: ", userlist);
   var content = '';
   var len = userlist.length-1;
-  console.log("len ",len);
+  //console.log("len ",len);
   for (var i=len; i >= 0; i--) {
     //console.log("userlist[i]: ",userlist[i]);
     var u = users.getUserById(userlist[i]);

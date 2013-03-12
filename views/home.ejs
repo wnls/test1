@@ -6,7 +6,7 @@
 <p><a href="following">Following: <%= followingN %> </a> </p>
 
 <h3>Compose a new tweet:</h3>
-<form method="post" id="compose" action="/newtweet">
+<form method="post" id="compose" action="/<%= username %>/newtweet">
 <textarea name="message" cols="25" rows="4">
 What's in your mind?
 </textarea><br>
