@@ -113,7 +113,7 @@ exports.follower = function(req, res) {
   var content = '';
   //console.log("followerlist: ",followerlist);
   if (followerlist.length !== 0) {
-    content += userToHtml(followerlist);
+    content += userToHtml(followerlist, "Delete");
 
   }
   //console.log("content: ", content);
@@ -132,7 +132,7 @@ exports.following = function(req, res) {
   var content = '';
   console.log("followinglist: ",followinglist);
   if (followinglist.length !== 0) {
-    content += userToHtml(followinglist);
+    content += userToHtml(followinglist, "Unfollow");
 
   }
   console.log("content: ", content);
@@ -145,14 +145,15 @@ exports.following = function(req, res) {
 }
 
 exports.interaction = function(req, res) {
-  console.log("loggedinuser: "+loggedInUser);
+  //console.log("loggedinuser: "+loggedInUser);
   var user = users.getUserById(loggedInUser);
-  var tl = getTByMention(loggedInUser, 20);
+  var tl = tweets.getTByMention(loggedInUser, 20);
 
   res.render('interaction',
             { title: 'Interaction',
               name: user.name,
               username: user.username,
+              tweets: tweetsToHtml(tl)
               });
 
 }
@@ -165,11 +166,8 @@ exports.to_home = function(req, res){
   res.redirect('/'+loggedInUser+'/home');
 };
 
-exports.form = function(req, res) {
 
-};
-
-function userToHtml(userlist) {
+function userToHtml(userlist, btntext) {
   //console.log("userlist: ", userlist);
   var content = '';
   var len = userlist.length-1;
@@ -179,7 +177,7 @@ function userToHtml(userlist) {
     var u = users.getUserById(userlist[i]);
     //console.log("u: ",u);
     content += '<p><b>'+u.name+'</b> <a href="/'+u.username+'/profile">@'+u.username+'</a><br>';
-    content += '<button onclick="deleteFollower()">Delete</button></p>';
+    content += '<button onclick="deleteFollower()">'+btntext+'</button></p>';
   }
   return content;
 }
