@@ -219,11 +219,17 @@ function msgToHtml(msg) {
 var userdb = users.userdb;
 var mytweets = tweets.tweetdb;
 var conversation = tweets.conversation;
+var settingsMsg = '';
+var profileMsg = '';
+
 /**
  * GET Help Page
  */
 exports.help = function (req,res) {
-	res.render('help', {title: 'Help'});
+	var userid=req.cookies.userid;
+	var onlineUser=online[userid];
+	var u = users.getUserById(onlineUser.username);
+	res.render('help', {title: 'Help', username: u.username});
 }
 
 /**
@@ -237,15 +243,20 @@ exports.help = function (req,res) {
  * It is also able to recognize active hashtags clicked/searched in a tweet.
  */
 exports.search = function (req,res) {
+	var userid=req.cookies.userid;
+	var onlineUser=online[userid];
+	var u = users.getUserById(onlineUser.username);
+		
 	var ht = '#ftw';
 	var query = "#"+req.params.query;
 	var results = tweets.searchTweetsByHT(ht);
 	res.render('search', {title: 'Search Result',
 								searchPhrase: query,
-								name : results[0].name,
-								username: results[0].username,
-								msg: msgToHtml(results[0].msg),
-								date: results[0].date});	
+								rname : results[0].name,
+								rusername: results[0].username,
+								rmsg: msgToHtml(results[0].msg),
+								rdate: results[0].date,
+								username: u.username});	
 	
 };
 
@@ -274,9 +285,9 @@ exports.detailedTweet = function (req, res) {
 	var tweetconvo = tweets.getTweetConvoByTweetID(tweetId);
 	var content = '';
 	
-	username = tweetconvo[0].username;
-	name = users.get_user(username).name;
-	ot = '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
+	var username = tweetconvo[0].username;
+	var name = users.get_user(username).name;
+	var ot = '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
 			+ '</a><br>' + msgToHtml(tweetconvo[0].msg) + '<br>' 
 			+ tweetconvo[0].date + '</p>';
 	
@@ -304,9 +315,9 @@ exports.detailedTweetFakeReply = function (req, res) {
 	var tweetconvo = tweets.getTweetConvoByTweetID(tweetId);
 	var content = '';
 	
-	username = tweetconvo[0].username;
-	name = users.get_user(username).name;
-	ot = '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
+	var username = tweetconvo[0].username;
+	var name = users.get_user(username).name;
+	var ot = '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
 			+ '</a><br>' + msgToHtml(tweetconvo[0].msg) + '<br>' 
 			+ tweetconvo[0].date + '</p>';
 	
@@ -327,4 +338,167 @@ exports.detailedTweetFakeReply = function (req, res) {
 						origTweet: ot,
 						username: tweetconvo[0].username});
 
+};
+
+/**
+ * Renders Edit Profile view
+ */
+exports.editProfile = function (req, res){
+	var userid=req.cookies.userid;
+	var onlineUser=online[userid];
+	if ( onlineUser.username == req.params.id){
+		var u = users.getUserById(onlineUser.username);
+		res.render('editProfile', { title: 'Edit Profile',
+			msg: profileMsg,
+			name: u.name,
+			username: u.username,
+			email: u.email,
+			location: u.location,
+			website: u.website,
+			profilePic: u.profilePic});
+	} else {
+        res.send('Page Access Not Authorized.');
+	}
+};
+
+/**
+ * Renders Edit Settings view
+ */
+exports.editSettings = function (req, res){
+	var userid=req.cookies.userid;
+	var onlineUser=online[userid];
+	if ( onlineUser.username == req.params.id){
+		var u = users.getUserById(onlineUser.username);
+		res.render('editSettings', {title: 'Edit Settings', 
+			msg: settingsMsg, 
+			pv: u.profVis, 
+			fp: u.folPerm, 
+			mp: u.mentionPerm, 
+			pm: u.pmPerm,
+			username: u.username});
+	} else {
+        res.send('Page Access Not Authorized.');
+	}
+};
+
+/**
+ * Makes changes to user settings
+ */
+exports.changeSettings = function (req, res){
+	var userid=req.cookies.userid;
+	var onlineUser=online[userid];
+	if ( onlineUser.username == req.params.id){
+		var u = users.getUserById(onlineUser.username);
+		if (req.body.profVis != undefined) {
+			u.profVis = req.body.profVis;
+		}
+		if (req.body.folPerm != undefined) {
+			u.folPerm = req.body.folPerm;
+		}
+		if (req.body.mentionPerm != undefined) {
+			u.mentionPerm = req.body.mentionPerm;
+		}
+		if (req.body.pmPerm != undefined) {
+			u.pmPerm = req.body.pmPerm;
+		}
+		settingsMsg = 'Changes saved.';
+		res.redirect('/'+u.username+'/editSettings');
+	} else {
+        res.send('Page Access Not Authorized.');
+	}
+};
+
+/**
+ * Makes changes to user profile excluding profile picture
+ */
+exports.changeProfile = function (req, res){
+	var flag = false;
+	
+	var userid=req.cookies.userid;
+	var onlineUser=online[userid];
+	if ( onlineUser.username == req.params.id){
+		var u = users.getUserById(onlineUser.username);
+	
+		//check if current password is entered
+		if (req.body.currentpass !== '') {
+			//check if current password entered matches saved password
+			if (req.body.currentpass === u.password) {
+				//check if user wants to change password
+				if (req.body.newpass === req.body.newpassconfirm) {
+						//make changes to info
+						if (req.body.name == "") {
+							//don't allow empty change
+							flag = true;
+							res.redirect('/'+u.username+'/editProfile');
+						} else {
+							u.name = req.body.name;
+						}
+						if (req.body.username == "") {
+							//don't allow empty change
+							flag = true;
+							res.redirect('/'+u.username+'/editProfile');
+						} else {
+							u.username = req.body.username;
+						}
+						if (req.body.email == "") {
+							//don't allow empty change
+							flag = true;
+							res.redirect('/'+u.username+'/editProfile');
+						} else {
+							u.email = req.body.email;
+						}
+						u.location = req.body.location;
+						u.website = req.body.website;
+						
+						//check if np fields are not empty
+						if ((req.body.newpass !== '') && (req.body.newpassconfirm !== '')) {
+							//make changes, np fields not empty
+							u.password = req.body.newpass;
+						};
+						if (flag) {
+							profileMsg = 'Cannot allow name, username, email to be empty.';
+						} else {
+							profileMsg = 'Changes saved.';
+						}
+						res.redirect('/'+u.username+'/editProfile');
+				//np fields did not match or one of them empty
+				} else {
+					profileMsg = 'Incorrect new password confirmation. No changes made. Please try again.';
+					res.redirect('/'+u.username+'/editProfile');
+				}
+			//if current password entered is incorrect, display error msg
+			} else {
+				profileMsg = 'Current password entered is incorrect. No changes made. Please try again.';
+				res.redirect('/'+u.username+'/editProfile');
+			}
+		//if current password is not entered, display error msg
+		} else {
+			profileMsg = 'Must enter current password to make changes. No changes made. Please try again.';
+			res.redirect('/'+u.username+'/editProfile');
+		}
+	} else {
+        res.send('Page Access Not Authorized.');
+	}
+};
+
+/**
+ * Makes changes to profile picture
+ * 
+ * This version does not support uploading the file though that form is active.
+ * It returns fake image upload at the moment.
+ * 
+ */
+exports.changeProfilePic = function (req, res) {
+	var flag = false;
+	
+	var userid=req.cookies.userid;
+	var onlineUser=online[userid];
+	if ( onlineUser.username == req.params.id){
+		var u = users.getUserById(onlineUser.username);
+		u.profilePic = 'fakeChangedPic.jpg';
+		profileMsg = 'Fake image generated here.';
+		res.redirect('/'+u.username+'/editProfile');
+	} else {
+		res.send('Page Access Not Authorized.');
+	}
 };

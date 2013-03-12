@@ -8,7 +8,7 @@
 	<p>
 		<font color="red"><%- msg %></font>
 	</p>
-	<form method="post" id="editSettings" action="/changeSettings">
+	<form method="post" id="editSettings" action="/<%= username %>/changeSettings">
 		Profile Visibility: <font color="gray"> <%- pv %> </font> <br>
 		<input type="radio" name="profVis" value="Public" /> Public <br>
 		<input type="radio" name="profVis" value="Followers Only" /> Followers Only <br>
@@ -31,7 +31,7 @@
 	<br>
 	
 	<p>
-		<a href="/editProfile">Edit Profile</a>
+		<a href="/<%- username %>/editProfile">Edit Profile</a>
 	</p>
 </div>
 <% include footer %>

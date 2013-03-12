@@ -1,8 +1,8 @@
 <div id="navbar">
 	<div id="nbleft">
-		<a href="/tim/home"><img src="/images/navbar/homeIcon.png"></a>
-		<a href="/tim/interaction"><img src="/images/navbar/interactionIcon.png"></a>
-		<img src="/images/navbar/profileIcon.png"></a>
+		<a href="/<%= username %>/home"><img src="/images/navbar/homeIcon.png"></a>
+		<a href="/<%= username %>/interaction"><img src="/images/navbar/interactionIcon.png"></a>
+		<a href="/<%= username %>/profile"><img src="/images/navbar/profileIcon.png"></a>
 	</div>
 	<div id="nbcenter1">
 		<form method="post" id="search" action="/searchBox">
@@ -15,7 +15,7 @@
 		<a href="/tim/newtweet"><img src="/images/navbar/messageIcon.png"></a>
 	</div>
 	<div id="nbright">
-		<a href="/editSettings"><img src="/images/navbar/settingsIcon.png"></a>
+		<a href="/<%= username %>/editSettings"><img src="/images/navbar/settingsIcon.png"></a>
 		<a href="/help"><img src="/images/navbar/helpIcon.png"></a>
 	</div>
 </div>

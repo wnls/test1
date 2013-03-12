@@ -81,6 +81,14 @@ app.post('/searchBox',routes.searchBox);
 app.get('/detailedTweet', routes.detailedTweet);
 app.post('/detailedTweetFakeReply', routes.detailedTweetFakeReply);
 
+app.get('/:id/editProfile', routes.editProfile);
+app.get('/:id/editSettings', routes.editSettings);
+
+app.post('/:id/changeSettings', routes.changeSettings);
+app.post('/:id/changeProfile', routes.changeProfile);
+app.post('/:id/changeProfilePic', routes.changeProfilePic);
+
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });

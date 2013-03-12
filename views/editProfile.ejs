@@ -8,7 +8,7 @@
 	<p>
 		<font color="red"><%- msg %></font>
 	</p>
-	<form method="post" id="editProfileInfo" action="/changeProfile">
+	<form method="post" id="editProfileInfo" action="/<%= username %>/changeProfile">
 		Name: <input type="text" name="name" value="<%- name %>" /><font color="red">*</font> <br>
 		Username: <input type="text" name="username" value="<%- username %>" /><font color="red">*</font> <br>
 		Email: <input type="text" name="email" value="<%- email %>" /><font color="red">*</font> <br>
@@ -26,7 +26,7 @@
 <div id="editImg">
 	<center>
 	<img src="/images/<%- profilePic %>" height="200" width="200" border="0"/> <br>
-	<form method="post" id="editProfilePic" action="/changeProfilePic" enctype="multipart/form-data">
+	<form method="post" id="editProfilePic" action="/<%= username %>/changeProfilePic" enctype="multipart/form-data">
 		Select new profile picture from computer: <input type="file" name="profilepic" accept="image/*" />
 		<br><br>
 		<input type="submit" name="submit" value="Change Profile Picture" />
