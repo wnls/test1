@@ -1,9 +1,13 @@
 <% include header %>
 
-<h1>Search Result</h1>
-<h3>for <%=query%></h3>
+<% include navbar %>
 
-<%-msg%>
+<h1>Search Result Page</h1>
+
+<h3>Results for " <%- searchPhrase %> " </h3>
+<script>
+	document.write('<p><b> <%- name %> </b> <a href="/ <%- username %> ">@ <%- username %> </a><br> <%- msg %> <br> <%- date %> </p>');
+</script>
 
 
 <% include footer %>
