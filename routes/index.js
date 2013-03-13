@@ -13,10 +13,7 @@ exports.home = function(req, res){
   var onlineUser=online[userid];
   if ( onlineUser !== undefined && onlineUser.username == req.params.id){
     var u = users.getUserById(onlineUser.username);
-    //console.log("onlineUser "+u);
     var tl = tweets.getRecentT(onlineUser.username, u.following, 20);
-    // display timeline tweets
-
   	res.render('home', 
     			{ title: 'Home',
     			  name: u.name,
@@ -30,7 +27,10 @@ exports.home = function(req, res){
   }
 }
 
-
+/*
+* Handles submiting request from new tweet button on Home page.
+* And redirect to Home page.
+*/
 exports.newtweet = function(req, res) {
   var username = req.params.id;
   var u = users.getUserById(username);
@@ -39,35 +39,22 @@ exports.newtweet = function(req, res) {
   res.redirect('/'+username+'/home');
 }
 
-exports.id = function(req, res) {
-  res.redirect('/'+req.params.id+'/profile');
-}
-
+/*
+* GET Profile page
+*/
 exports.profile = function(req, res) {
   var username = req.params.id;
   var u = users.getUserById(username);
   if (u !== undefined ) {
     var tl = tweets.getTByUser(username, 20);
     var j = tl.length;
-
-    // display tweets
-    var content='';
-    for (var i=0; i < j; i++) {
-      var t = tl[i];
-      var usr = users.getUserById(t.username);
-      content += '<p><b>'+usr.name+'</b> <a href="/'+username+'/profile">@'+username+'</a><br>'
-                //+t.msg+'<br>'
-                +msgToHtml(t.msg)+'<br>'
-                +t.date+'<br>'
-                +'<a href="/'+t.id+'/detailedTweet">Detail</a></p>';
-    }
     res.render('profile',
               {title: 'Profile',
                name: u.name,
                username: username,
                followerN: u.follower.length,
                followingN: u.following.length,
-               tweets: content
+               tweets: tweetsToHtml(tl)
                }
       );
   } else {
@@ -77,18 +64,17 @@ exports.profile = function(req, res) {
   }
 }
 
+/*
+* GET Follower page
+*/
 exports.follower = function(req, res) {
-	//console.log(req.params);
   var username = req.params.id;
   var user = users.getUserById(username);
   var followerlist = user.follower;
   var content = '';
-  //console.log("followerlist: ",followerlist);
   if (followerlist.length !== 0) {
     content += userToHtml(followerlist, "Delete");
-
   }
-  //console.log("content: ", content);
 	res.render('follower', 
   			{ title: 'Follower',
   			  name: user.name,
@@ -97,17 +83,18 @@ exports.follower = function(req, res) {
   			   } );
 }
 
+
+/*
+* GET Following page
+*/
 exports.following = function(req, res) {
 	var username = req.params.id;
   var user = users.getUserById(username);
   var followinglist = user.following;
   var content = '';
-  //console.log("followinglist: ",followinglist);
   if (followinglist.length !== 0) {
     content += userToHtml(followinglist, "Unfollow");
-
   }
-  //console.log("content: ", content);
   res.render('following', 
         { title: 'Following',
           name: user.name,
@@ -116,8 +103,10 @@ exports.following = function(req, res) {
            } );
 }
 
+/*
+* GET Interaction page
+*/
 exports.interaction = function(req, res) {
-  //console.log("loggedinuser: "+loggedInUser);
   var username = req.params.id;
   var user = users.getUserById(username);
   var tl = tweets.getTByMention(username, 20);
@@ -130,16 +119,16 @@ exports.interaction = function(req, res) {
               });
 
 }
+
+// ### *function*: userToHtml
 /*
-exports.to_interaction = function(req, res) {
-  res.redirect('/'+loggedInUser+'/interaction');
-}
-
-exports.to_home = function(req, res){
-  res.redirect('/'+loggedInUser+'/home');
-};*/
-
-
+* Generate HTML to display user list on follower and following page.
+* HTML includes name, username (hyperlink to user profile), button
+* 
+* @param userlist, array of user objects
+* @param btntext, text on the button displayed
+* @return content, generated HTML
+*/
 function userToHtml(userlist, btntext) {
   //console.log("userlist: ", userlist);
   var content = '';
@@ -155,6 +144,14 @@ function userToHtml(userlist, btntext) {
   return content;
 }
 
+// ### *function*: tweetsToHtml
+/*
+* Generate HTML to display tweets list which includes
+* name, @username(hyperlink to user profile), tweet message, date, and Detail(link to detailedTweet page)
+*
+* @param tl, array of tweets
+* @return content, converted HTML
+*/
 function tweetsToHtml(tl) {
   var j = tl.length;
   var content='';
@@ -170,6 +167,8 @@ function tweetsToHtml(tl) {
   }
   return content;
 }
+
+// ### *function*: msgToHtml
 /**
  * Find @username and #hashtag in a tweet message and convert them to a html href link.
  * In order to be recognized as a @username mention, @ symbol must be the start
@@ -191,7 +190,6 @@ function msgToHtml(msg) {
       content += word+" ";
     } 
   }
-  //console.log("html content: "+content);
   return content;
 }
 
