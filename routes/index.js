@@ -11,10 +11,10 @@ var online = entry.online;
 exports.home = function(req, res){
   var userid=req.cookies.userid;
   var onlineUser=online[userid];
-  if ( onlineUser.username == req.params.id){
+  if ( onlineUser !== undefined && onlineUser.username == req.params.id){
     var u = users.getUserById(onlineUser.username);
     //console.log("onlineUser "+u);
-    var tl = tweets.getRecentT(onlineUser, u.following, 20);
+    var tl = tweets.getRecentT(onlineUser.username, u.following, 20);
     // display timeline tweets
 
   	res.render('home', 
@@ -58,7 +58,8 @@ exports.profile = function(req, res) {
       content += '<p><b>'+usr.name+'</b> <a href="/'+username+'/profile">@'+username+'</a><br>'
                 //+t.msg+'<br>'
                 +msgToHtml(t.msg)+'<br>'
-                +t.date+'</p>';
+                +t.date+'<br>'
+                +'<a href="/'+t.id+'/detailedTweet">Detail</a></p>';
     }
     res.render('profile',
               {title: 'Profile',
@@ -74,29 +75,6 @@ exports.profile = function(req, res) {
                {title: 'Error',
                 msg: "Oops, this user does not exist."});
   }
-}
-
-exports.search = function(req, res) {
-  var query = "#"+req.params.query;
-  var result = tweets.getTByHashtag(query, 20);
-  var j = result.length-1;
-  var content='';
-  // display timeline tweets
-  for (var i=j; i >= j-10 && i >= 0; i--) {
-    //console.log("i="+i);
-    var t = result[i];
-    var usr = users.getUserById(t.username);
-    var a = t.msg.split(" ");
-    content += '<p><b>'+usr.name+'</b> <a href="/'+t.username+'/profile">@'+t.username+'</a><br>'
-              //+t.msg+'<br>'
-              +msgToHtml(t.msg)+'<br>'
-              +t.date+'</p>';
-  }
-  res.render('search',
-             {title: 'Search Result',
-              query: query,
-              msg: content
-             });
 }
 
 exports.follower = function(req, res) {
@@ -187,7 +165,8 @@ function tweetsToHtml(tl) {
     content += '<p><b>'+t.name+'</b> <a href="/'+t.username+'/profile">@'+t.username+'</a><br>'
               //+t.msg+'<br>'
               +msgToHtml(t.msg)+'<br>'
-              +t.date+'</p>';
+              +t.date+'<br>'
+              +'<a href="/'+t.id+'/detailedTweet">Detail</a></p>';
   }
   return content;
 }
@@ -246,7 +225,7 @@ exports.search = function (req,res) {
 	var userid=req.cookies.userid;
 	var onlineUser=online[userid];
 	var u = users.getUserById(onlineUser.username);
-		
+	//console.log("username "+u.username);
 	var ht = '#ftw';
 	var query = "#"+req.params.query;
 	var results = tweets.searchTweetsByHT(ht);
@@ -259,6 +238,28 @@ exports.search = function (req,res) {
 								username: u.username});	
 	
 };
+
+exports.search = function(req, res) {
+  var query = "#"+req.params.query;
+  var result = tweets.getTByHashtag(query, 20);
+  var j = result.length-1;
+  var content='';
+  // display timeline tweets
+  for (var i=j; i >= j-10 && i >= 0; i--) {
+    var t = result[i];
+    var usr = users.getUserById(t.username);
+    var a = t.msg.split(" ");
+    content += '<p><b>'+usr.name+'</b> <a href="/'+t.username+'/profile">@'+t.username+'</a><br>'
+              //+t.msg+'<br>'
+              +msgToHtml(t.msg)+'<br>'
+              +t.date+'</p>';
+  }
+  res.render('search',
+             {title: 'Search Result',
+              query: query,
+              msg: content
+             });
+}
 
 /**
  * Supports searching using the search box. Simply passes query string from search box to search.
@@ -280,21 +281,21 @@ exports.searchBox = function (req,res) {
  */
 exports.detailedTweet = function (req, res) {
 	//fetching conv1 using tweet2
-	//var tweetId = tid wherein tid is passed
+	var tweetId = req.params.tweetId;
 	var tweetId = 2;
 	var tweetconvo = tweets.getTweetConvoByTweetID(tweetId);
 	var content = '';
 	
 	var username = tweetconvo[0].username;
 	var name = users.get_user(username).name;
-	var ot = '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
+	var ot = '<p><b>' + name + '</b> <a href="/' + username + '/profile">@' + username
 			+ '</a><br>' + msgToHtml(tweetconvo[0].msg) + '<br>' 
 			+ tweetconvo[0].date + '</p>';
 	
 	for (var i=1; i < tweetconvo.length; i++) {
 		username = tweetconvo[i].username;
 		name = users.get_user(username).name;
-		content += '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
+		content += '<p><b>' + name + '</b> <a href="/' + username + '/profile">@' + username
 			+ '</a><br>' + msgToHtml(tweetconvo[i].msg) + '<br>' 
 			+ tweetconvo[i].date + '</p>';
 	}
@@ -317,14 +318,14 @@ exports.detailedTweetFakeReply = function (req, res) {
 	
 	var username = tweetconvo[0].username;
 	var name = users.get_user(username).name;
-	var ot = '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
+	var ot = '<p><b>' + name + '</b> <a href="/' + username + '/profile">@' + username
 			+ '</a><br>' + msgToHtml(tweetconvo[0].msg) + '<br>' 
 			+ tweetconvo[0].date + '</p>';
 	
 	for (var i=1; i < tweetconvo.length; i++) {
 		username = tweetconvo[i].username;
 		name = users.get_user(username).name;
-		content += '<p><b>' + name + '</b> <a href="/' + username + '">@' + username
+		content += '<p><b>' + name + '</b> <a href="/' + username + '/profile">@' + username
 			+ '</a><br>' + msgToHtml(tweetconvo[i].msg) + '<br>' 
 			+ tweetconvo[i].date + '</p>';
 	}

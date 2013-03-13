@@ -78,7 +78,7 @@ app.post('/:id/newtweet', routes.newtweet);
 app.get('/help',routes.help);
 app.get('/search/:query', routes.search);
 app.post('/searchBox',routes.searchBox);
-app.get('/detailedTweet', routes.detailedTweet);
+app.get('/:tweetId/detailedTweet', routes.detailedTweet);
 app.post('/detailedTweetFakeReply', routes.detailedTweetFakeReply);
 
 app.get('/:id/editProfile', routes.editProfile);
