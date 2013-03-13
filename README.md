@@ -16,3 +16,7 @@ Some additional notes:
   * replying on a tweet via detailed tweet page will only edit the last tweet posted
   * searching is only through hashtags and does not take into account users and help topics
   * cookies are only implemented in home and not site-wide
+  
+For testing what is already functional:
+* You may use login username: {tim, hazel, caleb}, password: {mit, lezah, belac}
+* In registering for a new user, please use a valid and active email. The system does send email!

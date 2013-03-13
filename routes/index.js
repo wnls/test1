@@ -199,8 +199,9 @@ var conversation = tweets.conversation;
 var settingsMsg = '';
 var profileMsg = '';
 
+// ## help
 /**
- * GET Help Page
+ * Renders Help Page
  */
 exports.help = function (req,res) {
 	var userid=req.cookies.userid;
@@ -209,8 +210,9 @@ exports.help = function (req,res) {
 	res.render('help', {title: 'Help', username: u.username});
 }
 
+// ## search
 /**
- * GET Search Result Page
+ * Renders Search Result Page
  * 
  * At the moment, only searches through hashtags. What is displayed is not what is returned, however.
  * We still need to figure out how to manipulate arrays in ejs.
@@ -238,6 +240,7 @@ exports.search = function (req,res) {
 	
 };
 
+// ## searchBox
 /**
  * Supports searching using the search box. Simply passes query string from search box to search.
  */
@@ -245,8 +248,9 @@ exports.searchBox = function (req,res) {
 	res.redirect('/search/'+req.body.query);
 };
 
+// ## detailedTweet
 /**
- * GET Detailed Tweet Page
+ * Renders Detailed Tweet Page
  * 
  * Renders detailed conversation. A conversation is a thread of tweets through replies.
  * The page displays the first "original" tweet in the conversation and the user information of who posted that tweet.
@@ -285,8 +289,12 @@ exports.detailedTweet = function (req, res) {
 						username: tweetconvo[0].username});
 };
 
+// ## detailedTweetFakeReply
 /**
  * This version shows how the display looks like with a fake reply post to the original tweet.
+ * It allows the user to send a tweet reply but reply is stored in static position in the conversation,
+ * i.e. the last position.
+ *
  */
 exports.detailedTweetFakeReply = function (req, res) {	
 	var tweetId = 2;
@@ -318,6 +326,7 @@ exports.detailedTweetFakeReply = function (req, res) {
 
 };
 
+// ## editSettings
 /**
  * Renders Edit Profile view
  */
@@ -344,7 +353,7 @@ exports.editProfile = function (req, res){
  * Renders Edit Settings view
  *
  * This page also has the link for Edit Profile.
- * To get to this page, 
+ * To get to this page, user can click on Tools icon.
  */
 exports.editSettings = function (req, res){
 	var userid=req.cookies.userid;
