@@ -1,7 +1,6 @@
 /**
- * --Tweetee Application Main File, app.js--
- * -ADD TWEETEE DESCRIPTION/BLURB HERE-
- *
+ * #--Tweetee Application--
+ * 
  * Module dependencies.
  */
 
@@ -33,18 +32,17 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 /*
- * Entry-related Routes
- *   '/'             -> renders login.ejs
- *   '/userAuth'     -> from login form, redirect to login.ejs or :user/home.ejs
- *   '/register'     -> renders register.ejs
- *   '/forgotlogin'  -> renders forgotlogin.ejs
- *   '/:user/home'   -> renders :user/home.ejs
- *   '/logout'       -> redirect to login.ejs
- *   '/verify'       -> from register form, redirect to register.ejs or render varifyCode
- *   '/verifyCode'   -> renders varifyCode.ejs
- *   '/codeCheck'    -> from verifyCode form, redirect to login.ejs or verifyCode.ejs
- *   '/forgotlogin'  -> renders forgotlogin.ejs
- *   '/forgetloginProcess -> from forgotlogin form, directs to the forgotlogin.ejs
+ * ##Entry-related Routes
+ *  +'/'             -> renders login.ejs
+ *  +'/userAuth'     -> from login form, redirect to login.ejs or :user/home.ejs
+ *  +'/register'     -> renders register.ejs
+ *  +'/forgotlogin'  -> renders forgotlogin.ejs
+ *  +'/logout'       -> redirect to login.ejs
+ *  +'/verify'       -> from register form, redirect to register.ejs or render varifyCode
+ *  +'/verifyCode'   -> renders varifyCode.ejs
+ *  +'/codeCheck'    -> from verifyCode form, redirect to login.ejs or verifyCode.ejs
+ *  +'/forgotlogin'  -> renders forgotlogin.ejs
+ *  +'/forgetloginProcess -> from forgotlogin form, directs to the forgotlogin.ejs
  */
 app.get('/', entry.login);    
 app.post('/userAuth',entry.userAuth);
@@ -58,7 +56,7 @@ app.get('/forgotlogin', entry.forgotlogin);
 app.post('/forgotloginProcess', entry.forgotloginProcess);
 
 /*
- * Specific UserInterf. Related Routes
+ * ##User Related Routes
  *   '/newtweet'        ->
  *   '/:user/profile'   ->
  *   '/:user/follower'  ->

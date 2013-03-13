@@ -1,26 +1,24 @@
+//#Entry.js
+//##Contains routes to views that are associated with entering Tweetee.
+
+//##Global variables
+//The user and tweet files in the lib directory is accessed. 'userids' records the
+//logged in user and 'online' is a logged in database.
 var users = require('../lib/users');
 var tweets = require('../lib/tweets');
-// Records the logged in user:
 var userids = 0;
-// A logged in "database":
-var online = [];
-exports.online = online; //needed if newTweet?
+var online = {};
+exports.online = online; 
+
+
 // # User Server-Side Routes
 
-//GET rsegister
-exports.register = function(req, res){
-  res.render('register',{title: 'Tweetee',message: req.flash("error")});
-};
-
-//GET forgotlogin
+//##Forgot Login
+//GET forgotlogin.ejs
 exports.forgotlogin = function(req, res){
   res.render('forgotlogin',{title: 'Tweetee', message: ""});
 };
-
-/* 
- * Post forgotlogin page with respective error message if 
- *
- */
+//Post forgotlogin with respective message, either error or success.
 exports.forgotloginProcess = function(req, res){
   var email = req.body.email;
   users.lookupForgotLoginInfo(email, function(message) {
@@ -29,11 +27,12 @@ exports.forgotloginProcess = function(req, res){
   });
 };
 
-exports.verifyCode = function(req, res){
-  res.render('verifyCode',{title: 'Tweetee', message: req.flash("message")});
+//##Registration
+//GET rsegister.ejs
+exports.register = function(req, res){
+  res.render('register',{title: 'Tweetee', message: req.flash("error")});
 };
-
-//Registration
+//POST : Use registration form results to check if information provided is valid
 exports.verify = function(req, res){
     var name = req.body.name;
     var username = req.body.username;
@@ -47,13 +46,19 @@ exports.verify = function(req, res){
             req.flash('message', message);
             res.render('register',{title: 'Tweetee', message: req.flash("message")});
         }else{
-            req.flash('message', "A code has been sent out to the email provided."
-              +"Submit it to confirm the account and complete the registration.");
-            res.render('verifyCode',{title:"Tweetee", message: req.flash("message"), email:email}); 
+             users.flash(req, res, 'message', 'A code has been sent out to the email provided.'
+              +'submit it to confirm the account and complete the registration.');
+             res.redirect('/verifyCode');
+            //req.flash('message', "A code has been sent out to the email provided."
+            //  +"Submit it to confirm the account and complete the registration.");
+            //res.redirect('verifyCode',{title:"Tweetee", message: req.flash("message"), email:email}); 
         }
     });
 }
-
+//GET verifyCode.js
+exports.verifyCode = function(req, res){
+  res.render('verifyCode',{title: 'Tweetee', message: req.flash("message")});
+};
 exports.codeCheck = function(req,res){
     users.lookupCodeCheck(req.body.code, function(message){
         if(message){
@@ -65,39 +70,6 @@ exports.codeCheck = function(req,res){
         }
   });
 }
-
-//Send the following to the client (user's page)
-exports.home = function (req, res) {
-    var userid=req.cookies.userid;
-    var onlineUser=online[userid];
-    console.log(req.params.user);
-    if (onlineUser.username == req.params.user){
-        var username = onlineUser.username;
-        var u = users.getUserById(username);
-        var j = tweets.tweets.length-1;
-        var content='';
-        // display timeline tweets
-        for (var i=j; i >= j-10 && i >= 0; i--) {
-    //console.log("i="+i);
-          var t = tweets.tweets[i];
-          var usr = users.getUserById(t.username);
-          var a = t.msg.split(" ");
-          console.log("split: "+a);
-          content += '<p><b>'+usr.name+'</b> <a href="/'+t.username+'/profile">@'+t.username+'</a><br>'
-                 +users.msgToHtml(t.msg)+'<br>'
-                 +t.date+'</p>';
-        }
-        res.render('home', 
-               { title: 'Home',
-                name: u.name,
-                username: username,
-                followerN: u.follower.length,
-                followingN: u.following.length,
-                tweets: content } );
-    }else{
-        res.send('Page Access Not Authorized.');
-    }
-};
 
 
 // ## login

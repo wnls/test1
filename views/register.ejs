@@ -1,11 +1,10 @@
 
     <% include entryheader %>
-    <h1><%- title %></h1>
-    <div>
-        <h3>Registration</h3>
-		<% if ( message ) { %>
-           <div class="flash"><%= message %></div>
-        <% } %>
+    <div class="entryBody">
+      <div class="entryCSS">
+        <h1><%= title %></h1>
+        <p>Registration</p>
+        <%=message %>
         <form method="post" action="/verify">
            Name: <input type="text" name="name"/>*<br/>
            Username: <input type="text" name="username"/>*<br/>
@@ -16,5 +15,6 @@
            Website: <input type="website" name="website"/><br/>
            <input type="submit" value="Submit"/>
         </form>
+      </div>
     </div>
     <% include footer %>
