@@ -239,46 +239,6 @@ exports.search = function (req,res) {
 								username: u.username});	
 	
 };
-<<<<<<< HEAD
-
-//exports.search = function(req, res) {
-//  var query = "#"+req.params.query;
-//  var result = tweets.getTByHashtag(query, 20);
-//  var j = result.length-1;
-//  var content='';
-//  // display timeline tweets
-//  for (var i=j; i >= j-10 && i >= 0; i--) {
-//    var t = result[i];
-//    var usr = users.getUserById(t.username);
-//    var a = t.msg.split(" ");
-//    content += '<p><b>'+usr.name+'</b> <a href="/'+t.username+'/profile">@'+t.username+'</a><br>'
-//              //+t.msg+'<br>'
-//              +msgToHtml(t.msg)+'<br>'
-//              +t.date+'</p>';
-//  }
-//  res.render('search',
-//             {title: 'Search Result',
-//              query: query,
-//              msg: content
-//             });
-//}
-=======
-/*
-exports.search = function(req, res) {
-	var userid=req.cookies.userid;
-	var onlineUser=online[userid];
-	var u = users.getUserById(onlineUser.username);
-  var query = "#"+req.params.query;
-  var results = tweets.getTByHashtag(query, 20);
-  
-  res.render('search',
-             {title: 'Search Result',
-              searchPhrase: query,
-              msg: tweetsToHtml(results),
-              username: u.username
-             });
-}*/
->>>>>>> added doc
 
 /**
  * Supports searching using the search box. Simply passes query string from search box to search.
