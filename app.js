@@ -31,19 +31,8 @@ app.configure(function(){
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
-/*
- * ##Entry-related Routes
- *  +'/'             -> renders login.ejs
- *  +'/userAuth'     -> from login form, redirect to login.ejs or :user/home.ejs
- *  +'/register'     -> renders register.ejs
- *  +'/forgotlogin'  -> renders forgotlogin.ejs
- *  +'/logout'       -> redirect to login.ejs
- *  +'/verify'       -> from register form, redirect to register.ejs or render varifyCode
- *  +'/verifyCode'   -> renders varifyCode.ejs
- *  +'/codeCheck'    -> from verifyCode form, redirect to login.ejs or verifyCode.ejs
- *  +'/forgotlogin'  -> renders forgotlogin.ejs
- *  +'/forgetloginProcess -> from forgotlogin form, directs to the forgotlogin.ejs
- */
+
+//##Entry-related Routes
 app.get('/', entry.login);    
 app.post('/userAuth',entry.userAuth);
 app.get('/register', entry.register);
@@ -55,18 +44,9 @@ app.post('/codeCheck',entry.codeCheck);
 app.get('/forgotlogin', entry.forgotlogin);
 app.post('/forgotloginProcess', entry.forgotloginProcess);
 
-/*
- * ##User Related Routes
- *   '/newtweet'        ->
- *   '/:user/profile'   ->
- *   '/:user/follower'  ->
- *   '/:user/following' ->
- */
-//app.get('/', routes.to_home);
-//app.get('/home', routes.to_home);
+//##User Related Routes
 app.get('/:id/home', routes.home);
 app.get('/:id/interaction', routes.interaction);
-//app.get('/interaction', routes.to_interaction);
 app.get('/:id/profile', routes.profile);
 app.get('/:id/follower', routes.follower);
 app.post('/:id/follower', routes.follower);

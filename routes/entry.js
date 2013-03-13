@@ -49,9 +49,6 @@ exports.verify = function(req, res){
              users.flash(req, res, 'message', 'A code has been sent out to the email provided.'
               +'submit it to confirm the account and complete the registration.');
              res.redirect('/verifyCode');
-            //req.flash('message', "A code has been sent out to the email provided."
-            //  +"Submit it to confirm the account and complete the registration.");
-            //res.redirect('verifyCode',{title:"Tweetee", message: req.flash("message"), email:email}); 
         }
     });
 }
