@@ -221,6 +221,7 @@ exports.help = function (req,res) {
  * This current version displays the first tweet from the result of searching tweets for hashtag "#ftw".
  * It is also able to recognize active hashtags clicked/searched in a tweet.
  */
+ 
 exports.search = function (req,res) {
 	var userid=req.cookies.userid;
 	var onlineUser=online[userid];
@@ -238,6 +239,7 @@ exports.search = function (req,res) {
 								username: u.username});	
 	
 };
+<<<<<<< HEAD
 
 //exports.search = function(req, res) {
 //  var query = "#"+req.params.query;
@@ -260,6 +262,23 @@ exports.search = function (req,res) {
 //              msg: content
 //             });
 //}
+=======
+/*
+exports.search = function(req, res) {
+	var userid=req.cookies.userid;
+	var onlineUser=online[userid];
+	var u = users.getUserById(onlineUser.username);
+  var query = "#"+req.params.query;
+  var results = tweets.getTByHashtag(query, 20);
+  
+  res.render('search',
+             {title: 'Search Result',
+              searchPhrase: query,
+              msg: tweetsToHtml(results),
+              username: u.username
+             });
+}*/
+>>>>>>> added doc
 
 /**
  * Supports searching using the search box. Simply passes query string from search box to search.
