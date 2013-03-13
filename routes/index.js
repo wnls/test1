@@ -341,8 +341,12 @@ exports.editProfile = function (req, res){
 	}
 };
 
+// ## editSettings
 /**
  * Renders Edit Settings view
+ *
+ * This page also has the link for Edit Profile.
+ * To get to this page, 
  */
 exports.editSettings = function (req, res){
 	var userid=req.cookies.userid;
@@ -360,7 +364,7 @@ exports.editSettings = function (req, res){
         res.send('Page Access Not Authorized.');
 	}
 };
-
+// ## changeSettings
 /**
  * Makes changes to user settings
  */
@@ -388,8 +392,13 @@ exports.changeSettings = function (req, res){
 	}
 };
 
+// ## changeProfile
 /**
  * Makes changes to user profile excluding profile picture
+ * 
+ * This version has not been cleaned after conversation with Tim on what goes to /routes.
+ * Most of the comparisons here will go to tweets.js.
+ * Another late information that I acquired is the required attribute for forms/input.
  */
 exports.changeProfile = function (req, res){
 	var flag = false;
@@ -461,11 +470,17 @@ exports.changeProfile = function (req, res){
 	}
 };
 
+// ## changeProfilePic
 /**
  * Makes changes to profile picture
  * 
  * This version does not support uploading the file though that form is active.
  * It returns fake image upload at the moment.
+ * 
+ * This is separated from the rest of the form for changing profile information because it was
+ * getting frustrating to figure out the uploading image part which was not really part of this project.
+ * Once the image upload is figured out, it will be merged with the rest of the data for changing profile
+ * or user information.
  * 
  */
 exports.changeProfilePic = function (req, res) {
