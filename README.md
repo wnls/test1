@@ -1,8 +1,7 @@
 # CMPSCI 326 Web Programming: Project 2
 # Team Sunapee
 
-We had a misconception about what this project was asking for but we tried to modify what we have so the site
-will show majority of the framework and some of the functionalities that we outlined in Project1.
+We had a misconception about what this project was asking for but we tried to modify what we have so the site will show majority of the framework and some of the functionalities that we outlined in Project1.
 
 Most of the exported functions in our /routes files will be greatly modified. We spoke to Tim about our misunderstanding about where functions/operations should go and we will be working on it.
 
@@ -16,4 +15,4 @@ Some additional notes:
   * clicking on @username will make the server unintentionally think that username is signed it even if he is not
   * replying on a tweet via detailed tweet page will only edit the last tweet posted
   * searching is only through hashtags and does not take into account users and help topics
-  
+  * cookies are only implemented in home and not site-wide
